@@ -1,0 +1,10 @@
+name              'flatpak'
+maintainer        'Robert Detjens'
+maintainer_email  'chef@detjens.dev'
+license           'MIT'
+description       'Installs/Configures flatpak'
+version           '0.1.0'
+chef_version      '>= 16.0'
+
+issues_url 'https://github.com/detjensrobert/flatpak-cookbook/issues'
+source_url 'https://github.com/detjensrobert/flatpak-cookbook'
