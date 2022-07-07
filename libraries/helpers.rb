@@ -39,15 +39,6 @@ module Flatpak
           r['flags'] = r['options'].map { |o| flatpak_repo_options_to_flags(o) }.compact
         end
       end
-
-      def flatpak_load_remotes_file
-        require 'iniparse'
-
-        fp_config = IniParse.parse(::File.read('/var/lib/flatpak/repo/config'))
-      end
     end
   end
 end
-
-# Chef::DSL::Recipe.include Flatpak::Cookbook::Helpers
-Chef::Resource.include Flatpak::Cookbook::Helpers

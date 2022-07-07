@@ -1,0 +1,37 @@
+#
+# This file is managed by Chef
+# Changes will be overwritten!
+#
+
+[remote "<%= @name %>"]
+url=<%= @url %>
+<% if @gpg_verify %>
+gpg-verify=true
+gpg-verify-summary=true
+<% end %>
+<% if @collection_id %>
+collection-id=<%= @collection_id %>
+<% end %>
+<% if @priority %>
+xa.prio=<%= @priority %>
+<% end %>
+<% if @title %>
+xa.title=<%= @title %>
+xa.title-is-set=true
+<% end %>
+<% if @comment %>
+xa.comment=<%= @comment %>
+xa.comment-is-set=true
+<% end %>
+<% if @description %>
+xa.description=<%= @description %>
+xa.description-is-set=true
+<% end %>
+<% if @homepage %>
+xa.homepage=<%= @homepage %>
+xa.homepage-is-set=true
+<% end %>
+<% if @icon %>
+xa.icon=<%= @icon %>
+xa.icon-is-set=true
+<% end %>

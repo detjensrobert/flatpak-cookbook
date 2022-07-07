@@ -1,0 +1,26 @@
+#
+# This file is managed by Chef
+# Changes will be overwritten!
+#
+
+[Flatpak Repo]
+Url=<%= @url %>
+<% if @title %>
+Title=<%= @title %>
+<% end %>
+<% if @comment %>
+Comment=<%= @comment %>
+<% end %>
+<% if @description %>
+Description=<%= @description %>
+<% end %>
+<% if @homepage %>
+Homepage=<%= @homepage %>
+<% end %>
+<% if @icon %>
+Icon=<%= @icon %>
+<% end %>
+<% if @gpgkey %>
+GPGKey=<%= @gpgkey %>
+<% end %>
+

@@ -4,6 +4,10 @@ unified_mode true
 property :remote_name, String, name_property: true,
           description: 'Name of the remote to configure'
 
+# Either .location OR .url, etc are required
+# .location is the url from `flatpak install URL`
+# and contains all the other stuff
+
 property :location, String
 
 property :url, String
@@ -13,6 +17,12 @@ property :description, String
 property :homepage, String
 property :icon, String
 property :gpgkey, String
+property :gpg_verify, [true, false], default: true
+property :collection_id, String
+# (location file )
+
+# property :filter, Array, default: [],
+#           description: 'List of filters to apply, see flatpak-remote-add docs'
 
 property :priority, Integer,
           coerce: proc { |p| p.to_i },
@@ -20,58 +30,45 @@ property :priority, Integer,
 
 property :subset, String
 
-# property :filter, Array, default: [],
-#           description: 'List of filters to apply, see flatpak-remote-add docs'
-
-property :flags, Array, default: [],
-          coerce: proc { |p| p.sort },
-          description: 'Additional CLI flags to specify when creating the repo'
-
-# property :user, [true, false], default: false,
-#           description: 'Use the per-user configuration instead of system-wide'
-
-# podman output columns vs. flag names
-# alias_method :url, :location
-
 action_class do
   include Flatpak::Cookbook::Helpers
-
-  def installed_remotes
-    shell_out!('flatpak remotes').split("\n").map { |r| r.split("\t").first }
-  end
 end
 
 action :add do
-  unless installed_remotes.include? new_resource.remote_name
-    converge_by "add remote #{new_resource.remote_name}" do
-      cmd = [
-        'flatpak',
-        # (new_resource.user ? '--user' : '--system'),
-        # modify existing remote, or create
-        'remote-add',
-        # flatpak remote-add NAME LOCATION --OPTIONS
-        new_resource.remote_name,
-        new_resource.location,
-        ("--prio='#{new_resource.priority}'" if new_resource.priority),
-        ("--title='#{new_resource.title}'" if new_resource.title),
-        ("--comment='#{new_resource.comment}'" if new_resource.comment),
-        ("--description='#{new_resource.description}'" if new_resource.description),
-        ("--homepage='#{new_resource.homepage}'" if new_resource.homepage),
-        ("--icon='#{new_resource.icon}'" if new_resource.icon),
-        ("--subset='#{new_resource.subset}'" if new_resource.subset),
-        # ("--filter='#{new_resource.filter}'" if !new_resource.filter.empty?),
-        *new_resource.flags, # any additional user-supplied ones
-      ].join(' ')
+  # validate either required property is met
+  unless new_resource.location || new_resource.url
+    raise "The #{new_resource.remote_name} `flatpak_remote` resource must have either .location or .url specified!"
+  end
 
-      shell_out!(cmd)
+  directory '/etc/flatpak/remotes.d' do
+    recursive true
+  end
+
+  if new_resource.location
+    remote_file "/etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo" do
+      source new_resource.location
+    end
+  else
+    template "/etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo" do
+      source 'remote.flatpakrepo.erb'
+      cookbook 'flatpak'
+      variables(
+        name: new_resource.remote_name,
+        url: new_resource.url,
+        priority: new_resource.priority,
+        title: new_resource.title,
+        comment: new_resource.comment,
+        description: new_resource.description,
+        homepage: new_resource.homepage,
+        icon: new_resource.icon,
+        collection_id: new_resource.collection_id
+      )
     end
   end
 end
 
 action :remove do
-  unless installed_remotes.include? new_resource.remote_name
-    converge_by "remove remote #{new_resource.remote_name}" do
-      shell_out!("flatpak remote-delete #{new_resource.remote_name}")
-    end
+  file "/etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo" do
+    action :delete
   end
 end

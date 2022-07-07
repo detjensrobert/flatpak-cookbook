@@ -3,7 +3,8 @@ flatpak_install 'test' do
 end
 
 flatpak_remote 'fedora' do
-  location 'oci+https://registry.fedoraproject.org'
-  user true
+  url 'oci+https://registry.fedoraproject.org'
+  title 'Fedora'
+  comment 'Fedora Flatpaks'
   subset 'org.fedoraproject.*'
 end

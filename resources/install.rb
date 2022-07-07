@@ -17,7 +17,6 @@ action :install do
   if new_resource.configure_flathub
     flatpak_remote 'flathub' do
       location 'https://flathub.org/repo/flathub.flatpakrepo'
-      # url 'https://dl.flathub.org/repo/'
     end
   end
 end
