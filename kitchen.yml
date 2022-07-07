@@ -20,6 +20,7 @@ platforms:
   - name: centos-stream-8
   - name: debian-10
   - name: debian-11
+  - name: fedora-latest
   - name: ubuntu-18.04
   - name: ubuntu-20.04
   - name: ubuntu-22.04
@@ -27,8 +28,8 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[flatpak::default]
+      - recipe[flatpak-test::default]
 
   - name: remote
     run_list:
-      - recipe[flatpak::remote]
+      - recipe[flatpak-test::remote]
