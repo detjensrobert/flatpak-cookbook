@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
-> ⚠️ **WARNING**: WIP
+> ⚠️ **WARNING**: Work in progress!
 >
 > This cookbook is still under development! Things may be not working and poorly documented!
 
@@ -31,9 +31,21 @@ Currently, this cookbook only supports installing apps system-wide, and not per-
 
 ## Resources
 
-- [`flatpak_install`](documentation/install.md`)
-- [`flatpak_remote`](documentation/remote.md`)
-- [`flatpak_app`](documentation/app.md`)
+- [`flatpak_install`](documentation/install.md) - Set up Flatpak
+- [`flatpak_remote`](documentation/remote.md) - Configure remotes
+- [`flatpak_app`](documentation/app.md) - Install applications
+
+## Minimal Example
+
+```rb
+flatpak_install 'example'
+# ^ also configures flathub remote by default
+
+flatpak_app 'org.clementine_player.Clementine'
+flatpak_app 'org.mozilla.firefox'
+```
+
+> **Note:** If the node is on a slow connection (e.g. < 1MB/s), the install command `shell_out` may time out when installing applications and Chef will fail. If this happens, run Chef again and Flatpak will pick up the install where it left off.
 
 ## Contributing
 
