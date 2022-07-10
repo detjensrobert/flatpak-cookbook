@@ -2,7 +2,7 @@ provides :flatpak_install
 unified_mode true
 
 property :configure_flathub, [true, false], default: true,
-          description: 'Add the flathub remote automatically '
+          description: 'Add the flathub remote automatically.'
 
 action :install do
   # upstream recommends their PPA for older ubuntu versions (older than 22.04)

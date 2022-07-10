@@ -7,8 +7,8 @@ property :remote_name, String, name_property: true,
 # Either .location OR .url, etc are required
 # .location is the url from `flatpak install URL`
 # and contains all the other stuff
-
-property :location, String
+property :location, String,
+          regex: /.+\.flatpakrepo/
 
 property :url, String
 property :title, String
@@ -17,31 +17,45 @@ property :description, String
 property :homepage, String
 property :icon, String
 property :gpgkey, String
-property :gpg_verify, [true, false], default: true
 property :collection_id, String
-# (location file )
 
-# property :filter, Array, default: [],
-#           description: 'List of filters to apply, see flatpak-remote-add docs'
+property :filters, Array,
+          description: 'List of filters to apply, see flatpak-remote-add docs'
 
 property :priority, Integer,
           coerce: proc { |p| p.to_i },
           description: 'Priority for the configured remote, higher will be chosen first'
 
-property :subset, String
-
 action_class do
   include Flatpak::Cookbook::Helpers
+
+  def installed_remotes
+    shell_out!('flatpak remotes --columns name').stdout.split
+  end
 end
 
 action :add do
-  # validate either required property is met
+  # validate either of the required properties are set
   unless new_resource.location || new_resource.url
     raise "The #{new_resource.remote_name} `flatpak_remote` resource must have either .location or .url specified!"
+  end
+  # warn if both are set
+  if new_resource.location && new_resource.url
+    warn 'Preferring .location over manual .url, did you mean to set both?'
   end
 
   directory '/etc/flatpak/remotes.d' do
     recursive true
+  end
+
+  filter_file = nil
+  if new_resource.filters
+    filter_file = "/etc/flatpak/remotes.d/#{new_resource.remote_name}.filter"
+    template filter_file do
+      source 'remote.filter.erb'
+      cookbook 'flatpak'
+      variables(filters: new_resource.filters)
+    end
   end
 
   if new_resource.location
@@ -55,14 +69,25 @@ action :add do
       variables(
         name: new_resource.remote_name,
         url: new_resource.url,
-        priority: new_resource.priority,
         title: new_resource.title,
         comment: new_resource.comment,
         description: new_resource.description,
         homepage: new_resource.homepage,
         icon: new_resource.icon,
-        collection_id: new_resource.collection_id
+        gpgkey: new_resource.gpgkey,
+        collection_id: new_resource.collection_id,
+        filter_file: filter_file
       )
+    end
+  end
+
+  if new_resource.priority
+    current_priorities = shell_out!('flatpak remotes --columns name,priority').stdout.split("\n").map(&:split).to_h
+
+    if current_priorities[new_resource.remote_name].to_i != new_resource.priority.to_i
+      converge_by "set priority for #{new_resource.remote_name}" do
+        shell_out!("flatpak remote-modify #{new_resource.remote_name} --prio=#{new_resource.priority}")
+      end
     end
   end
 end

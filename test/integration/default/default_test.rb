@@ -1,5 +1,5 @@
 control 'flatpak' do
-  title 'flatpak package is installed'
+  title 'Flatpak package is installed'
 
   describe package('flatpak') do
     it { should be_installed }
@@ -11,7 +11,7 @@ control 'flatpak' do
 end
 
 control 'remote' do
-  title 'flatpak remote is configured'
+  title 'Flatpak remote is configured'
 
   describe ini('/etc/flatpak/remotes.d/flathub.flatpakrepo') do
     its(['Flatpak Repo', 'Url']) { should eq 'https://dl.flathub.org/repo/' }
@@ -24,5 +24,13 @@ control 'remote' do
   describe command('flatpak remote-ls --columns application') do
     its('stdout') { should match /org.mozilla.firefox/ }
     its('stdout') { should match /com.valvesoftware.Steam/ }
+  end
+end
+
+control 'app' do
+  title 'Flatpak apps are installed'
+
+  describe command('flatpak list --columns application') do
+    its('stdout') { should match /org.clementine_player.Clementine/ }
   end
 end

@@ -4,7 +4,6 @@
 
 Installs Flatpak and optionally configures the standard Flathub remote.
 
-
 > **Note:**
 >
 > On older Ubuntu versions (20.04 and below), this resource uses a PPA to install a newer version of Flatpak, as

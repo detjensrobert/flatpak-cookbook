@@ -20,7 +20,6 @@ Installs Flatpak applications and runtimes. Equivalent of `flatpak install`.
 | `remote` | String |                 | Remote to install the application from                                                                  |
 | `flags`  | Array  |                 | Any additional command-line flags to use                                                                |
 
-
 ## Examples
 
 ```ruby

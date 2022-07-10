@@ -4,11 +4,9 @@
 [![CI State](https://github.com/detjensrobert/flatpak-cookbook/workflows/ci/badge.svg)](https://github.com/detjensrobert/flatpak-cookbook/actions?query=workflow%3Aci)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-
 > ⚠️ **WARNING**: Work in progress!
 >
 > This cookbook is still under development! Things may be not working and poorly documented!
-
 
 ## Description
 

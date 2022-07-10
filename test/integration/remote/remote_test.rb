@@ -1,5 +1,5 @@
 control 'flatpak' do
-  title 'flatpak package is installed'
+  title 'Flatpak package is installed'
 
   describe package('flatpak') do
     it { should be_installed }
@@ -11,20 +11,31 @@ control 'flatpak' do
 end
 
 control 'remote' do
-  title 'flatpak remote is configured'
+  title 'Flatpak remotes are configured correctly'
 
-  describe ini('/etc/flatpak/remotes.d/fedora.flatpakrepo') do
+  describe file('/etc/flatpak/remotes.d/fedora.flatpakrepo') do
     it { should exist }
-    its(['Flatpak Repo', 'Url']) { should eq 'oci+https://registry.fedoraproject.org' }
+    its('content') { should match Regexp.escape('Url=oci+https://registry.fedoraproject.org') }
+  end
+
+  describe file('/etc/flatpak/remotes.d/fedora.filter') do
+    it { should exist }
+    its('content') { should match /deny \*/ }
+    its('content') { should match /allow org.fedoraproject.\*/ }
+  end
+
+  describe file('/etc/flatpak/remotes.d/gnome-nightly.flatpakrepo') do
+    it { should_not exist }
   end
 
   describe command('flatpak remotes --columns name') do
     its('stdout') { should match /fedora/ }
+    its('stdout') { should_not match /gnome-nightly/ }
   end
 
-  describe command('flatpak remote-ls --columns application') do
+  describe command('flatpak remote-ls fedora --columns application') do
     its('stdout') { should match /org.fedoraproject.MediaWriter/ }
     # recipe confgures remote to only show org.fedoraproject.*
-    its('stdout') { should_not match /org.mozilla.Firefox/ }
+    its('stdout') { should_not match /org.gnome/ }
   end
 end

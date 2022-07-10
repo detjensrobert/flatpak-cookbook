@@ -30,6 +30,8 @@ jobs:
           - ubuntu-2204
         suite:
           - default
+          - remote
+          - app
       fail-fast: false
 
     steps:

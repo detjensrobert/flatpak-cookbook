@@ -9,16 +9,16 @@ property :remote, String,
 
 property :flags, Array, default: [],
           coerce: proc { |p| p.sort },
-          description: 'Additional CLI flags to specify when installing'
+          description: 'Additional CLI flags to specify when installing / updating'
 
 action_class do
-  def get_installed_flatpaks
+  def installed_apps
     shell_out!('flatpak list --columns application,ref').stdout.split
   end
 end
 
 action :install do
-  unless get_installed_flatpaks.include? new_resource.ref
+  unless installed_apps.include? new_resource.ref
     converge_by "install #{new_resource.ref}#{(' from remote ' + new_resource.remote) if new_resource.remote}" do
       cmd = [
         'flatpak install --noninteractive --assumeyes',
@@ -27,7 +27,36 @@ action :install do
         *new_resource.flags,
       ].join(' ')
 
-      shell_out!(cmd)
+      shell_out!(cmd, timeout: 3600)
+    end
+  end
+end
+
+action :update do
+  if installed_apps.include? new_resource.ref
+    converge_by "update #{new_resource.ref}" do
+      cmd = [
+        'flatpak update --noninteractive --assumeyes',
+        new_resource.ref,
+        *new_resource.flags,
+      ].join(' ')
+
+      shell_out!(cmd, timeout: 3600)
+    end
+  end
+end
+
+action :remove do
+  if installed_apps.include? new_resource.ref
+    converge_by "remove #{new_resource.ref}" do
+      cmd = [
+        'flatpak install --noninteractive --assumeyes',
+        new_resource.remote,
+        new_resource.ref,
+        *new_resource.flags,
+      ].join(' ')
+
+      shell_out!(cmd, timeout: 3600)
     end
   end
 end

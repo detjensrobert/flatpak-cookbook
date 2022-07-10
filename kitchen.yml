@@ -33,3 +33,9 @@ suites:
   - name: remote
     run_list:
       - recipe[flatpak-test::remote]
+    provisioner:
+      enforce_idempotency: false
+
+  - name: app
+    run_list:
+      - recipe[flatpak-test::app]
