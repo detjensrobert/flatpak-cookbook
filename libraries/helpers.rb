@@ -25,6 +25,10 @@ module Flatpak
           shell_out!('flatpak list').stdout.split("\n").map { |r| r.split[-5] }
         end
       end
+
+      def noninteractive
+        '--noninteractive' if flatpak_version >= 1.2
+      end
     end
   end
 end

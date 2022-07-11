@@ -19,7 +19,7 @@ action :install do
   unless flatpak_current_apps.include? new_resource.ref
     converge_by "install #{new_resource.ref}#{(' from remote ' + new_resource.remote) if new_resource.remote}" do
       cmd = [
-        'flatpak install --noninteractive --assumeyes',
+        "flatpak install #{noninteractive} --assumeyes",
         new_resource.remote,
         new_resource.ref,
         *new_resource.flags,
@@ -34,7 +34,7 @@ action :update do
   if flatpak_current_apps.include? new_resource.ref
     converge_by "update #{new_resource.ref}" do
       cmd = [
-        'flatpak update --noninteractive --assumeyes',
+        "flatpak update #{noninteractive} --assumeyes",
         new_resource.ref,
         *new_resource.flags,
       ].join(' ')
@@ -48,7 +48,7 @@ action :remove do
   if flatpak_current_apps.include? new_resource.ref
     converge_by "remove #{new_resource.ref}" do
       cmd = [
-        'flatpak remove --noninteractive --assumeyes',
+        "flatpak remove #{noninteractive} --assumeyes",
         new_resource.ref,
         *new_resource.flags,
       ].join(' ')
