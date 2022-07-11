@@ -38,6 +38,9 @@ control 'remote' do
   describe command('flatpak remote-ls fedora') do
     its('stdout') { should match /org.fedoraproject.MediaWriter/ }
     # recipe confgures remote to only show org.fedoraproject.*
-    its('stdout') { should_not match /org.gnome/ }
+    # only newer flatpak has filter stuff though
+    if (os.redhat? && os.release.to_i == 7) || os[:family] == 'amazon' || (os.debian? && os.release.to_i == 10)
+      its('stdout') { should_not match /org.gnome/ }
+    end
   end
 end

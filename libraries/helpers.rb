@@ -18,6 +18,14 @@ module Flatpak
         end
       end
 
+      def flatpak_current_priorities
+        if flatpak_version >= 1.1 # for --columns
+          shell_out!('flatpak remotes --columns name,priority').stdout.split("\n").map(&:split).to_h
+        else
+          shell_out!('flatpak remotes').stdout.split("\n").map { |r| r.split("\t").first }
+        end
+      end
+
       def flatpak_installed_apps
         if flatpak_version >= 1.1 # for --columns
           shell_out!('flatpak list --columns application,ref').stdout.split

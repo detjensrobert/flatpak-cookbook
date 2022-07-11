@@ -86,9 +86,7 @@ action :add do
   end
 
   if new_resource.priority
-    current_priorities = shell_out!('flatpak remotes --columns name,priority').stdout.split("\n").map(&:split).to_h
-
-    if current_priorities[new_resource.remote_name].to_i != new_resource.priority.to_i
+    if flatpak_current_priorities[new_resource.remote_name].to_i != new_resource.priority.to_i
       converge_by "set priority for #{new_resource.remote_name}" do
         shell_out!("flatpak remote-modify #{new_resource.remote_name} --prio=#{new_resource.priority}")
       end
