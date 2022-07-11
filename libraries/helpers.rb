@@ -22,7 +22,10 @@ module Flatpak
         if flatpak_version >= 1.1 # for --columns
           shell_out!('flatpak remotes --columns name,priority').stdout.split("\n").map(&:split).to_h
         else
-          shell_out!('flatpak remotes').stdout.split("\n").map { |r| r.split("\t").first }
+          shell_out!('flatpak remotes').stdout.split("\n").map do |r|
+            remote = r.split("\t")
+            [remote[0], remote[-1]]
+          end.to_h
         end
       end
 
