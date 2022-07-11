@@ -13,7 +13,8 @@ end
 control 'app' do
   title 'Flatpak apps are installed'
 
-  describe command('flatpak list --columns application,origin') do
+  # describe command('flatpak list --columns application,origin') do
+  describe command('flatpak list') do
     its('stdout') { should match /org.gnome.Music\s+flathub/ }
     its('stdout') { should match /org.gnome.Calculator\s+fedora/ }
   end

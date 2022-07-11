@@ -17,7 +17,7 @@ Installs Flatpak applications and runtimes. Equivalent of `flatpak install`.
 | Name     | Type   | Default         | Description                                                                                             |
 |----------|--------|-----------------|---------------------------------------------------------------------------------------------------------|
 | `ref`    | String | (resource name) | Name of the application to install. Either `the.application.Id` or `the.application.Id/{arch}/{branch}` |
-| `remote` | String |                 | Remote to install the application from                                                                  |
+| `remote` | String |                 | Remote to install the application from. **Required on CentOS 7 and Amazon!**                            |
 | `flags`  | Array  |                 | Any additional command-line flags to use                                                                |
 
 ## Examples

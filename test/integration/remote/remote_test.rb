@@ -28,12 +28,14 @@ control 'remote' do
     it { should_not exist }
   end
 
-  describe command('flatpak remotes --columns name') do
+  # describe command('flatpak remotes --columns name') do
+  describe command('flatpak remotes') do
     its('stdout') { should match /fedora/ }
     its('stdout') { should_not match /gnome-nightly/ }
   end
 
-  describe command('flatpak remote-ls fedora --columns application') do
+  # describe command('flatpak remote-ls fedora --columns application') do
+  describe command('flatpak remote-ls fedora') do
     its('stdout') { should match /org.fedoraproject.MediaWriter/ }
     # recipe confgures remote to only show org.fedoraproject.*
     its('stdout') { should_not match /org.gnome/ }

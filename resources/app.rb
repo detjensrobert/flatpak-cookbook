@@ -16,6 +16,9 @@ action_class do
 end
 
 action :install do
+  # older flatpak versions need the remote to install from
+  raise "`remote` must be specified for `flatpak_app` for flatpak versions < 1.1" unless new_resource.remote || flatpak_version >= 1.1
+
   unless flatpak_current_apps.include? new_resource.ref
     converge_by "install #{new_resource.ref}#{(' from remote ' + new_resource.remote) if new_resource.remote}" do
       cmd = [
