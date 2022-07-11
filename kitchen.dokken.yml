@@ -3,7 +3,9 @@ driver:
   name: dokken
   privileged: true
   chef_version: current
-  pull_platform_image: false # I have a slow connection at home
+  # I have a slow connection at home
+  # so don't try to pull docker images if they already exist
+  pull_platform_image: false
 
 transport:
   name: dokken

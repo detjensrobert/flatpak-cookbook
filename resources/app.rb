@@ -12,13 +12,11 @@ property :flags, Array, default: [],
           description: 'Additional CLI flags to specify when installing / updating'
 
 action_class do
-  def installed_apps
-    shell_out!('flatpak list --columns application,ref').stdout.split
-  end
+  include Flatpak::Cookbook::Helpers
 end
 
 action :install do
-  unless installed_apps.include? new_resource.ref
+  unless flatpak_current_apps.include? new_resource.ref
     converge_by "install #{new_resource.ref}#{(' from remote ' + new_resource.remote) if new_resource.remote}" do
       cmd = [
         'flatpak install --noninteractive --assumeyes',
@@ -33,7 +31,7 @@ action :install do
 end
 
 action :update do
-  if installed_apps.include? new_resource.ref
+  if flatpak_current_apps.include? new_resource.ref
     converge_by "update #{new_resource.ref}" do
       cmd = [
         'flatpak update --noninteractive --assumeyes',
@@ -47,11 +45,10 @@ action :update do
 end
 
 action :remove do
-  if installed_apps.include? new_resource.ref
+  if flatpak_current_apps.include? new_resource.ref
     converge_by "remove #{new_resource.ref}" do
       cmd = [
-        'flatpak install --noninteractive --assumeyes',
-        new_resource.remote,
+        'flatpak remove --noninteractive --assumeyes',
         new_resource.ref,
         *new_resource.flags,
       ].join(' ')

@@ -28,10 +28,6 @@ property :priority, Integer,
 
 action_class do
   include Flatpak::Cookbook::Helpers
-
-  def installed_remotes
-    shell_out!('flatpak remotes --columns name').stdout.split
-  end
 end
 
 action :add do
@@ -81,6 +77,14 @@ action :add do
     end
   end
 
+  # older versions of flatpak don't pick up flatpakrepo files in remotes.d
+  # gotta tell it to import the remote manually
+  unless flatpak_current_remotes.include?(new_resource.remote_name)
+    converge_by "import #{new_resource.remote_name}.flatpakrepo" do
+      shell_out!("flatpak remote-add #{new_resource.remote_name} /etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo")
+    end
+  end
+
   if new_resource.priority
     current_priorities = shell_out!('flatpak remotes --columns name,priority').stdout.split("\n").map(&:split).to_h
 
@@ -95,5 +99,17 @@ end
 action :remove do
   file "/etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo" do
     action :delete
+  end
+
+  file "/etc/flatpak/remotes.d/#{new_resource.remote_name}.filter" do
+    action :delete
+  end
+
+  # older versions of flatpak don't updated from flatpakrepo files in remotes.d
+  # gotta tell it to delete the remote manually
+  if flatpak_current_remotes.include?(new_resource.remote_name)
+    converge_by "remove #{new_resource.remote_name}" do
+      shell_out!("flatpak remote-delete #{new_resource.remote_name} /etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo")
+    end
   end
 end
