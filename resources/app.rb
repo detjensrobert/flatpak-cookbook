@@ -19,7 +19,7 @@ action :install do
   # older flatpak versions need the remote to install from
   raise '`remote` must be specified for `flatpak_app` for flatpak versions < 1.1' unless new_resource.remote || flatpak_version >= 1.1
 
-  unless flatpak_current_apps.include? new_resource.ref
+  unless flatpak_installed_apps.include? new_resource.ref
     converge_by "install #{new_resource.ref}#{(' from remote ' + new_resource.remote) if new_resource.remote}" do
       cmd = [
         "flatpak install #{noninteractive} --assumeyes",
@@ -34,7 +34,7 @@ action :install do
 end
 
 action :update do
-  if flatpak_current_apps.include? new_resource.ref
+  if flatpak_installed_apps.include? new_resource.ref
     converge_by "update #{new_resource.ref}" do
       cmd = [
         "flatpak update #{noninteractive} --assumeyes",
@@ -48,7 +48,7 @@ action :update do
 end
 
 action :remove do
-  if flatpak_current_apps.include? new_resource.ref
+  if flatpak_installed_apps.include? new_resource.ref
     converge_by "remove #{new_resource.ref}" do
       cmd = [
         "flatpak remove #{noninteractive} --assumeyes",

@@ -18,11 +18,22 @@ module Flatpak
         end
       end
 
-      def flatpak_current_apps
+      def flatpak_installed_apps
         if flatpak_version >= 1.1 # for --columns
           shell_out!('flatpak list --columns application,ref').stdout.split
         else
           shell_out!('flatpak list').stdout.split("\n").map do |r|
+            ref = r.split("\t").first # list on this version only returns the full ref
+            [ref, ref.split('/').first] # so extract just the.application.id from it
+          end.flatten
+        end
+      end
+
+      def flatpak_updateable_apps
+        if flatpak_version >= 1.1 # for --columns
+          shell_out!('flatpak list --updates --columns application,ref').stdout.split
+        else
+          shell_out!('flatpak list --updates').stdout.split("\n").map do |r|
             ref = r.split("\t").first # list on this version only returns the full ref
             [ref, ref.split('/').first] # so extract just the.application.id from it
           end.flatten
