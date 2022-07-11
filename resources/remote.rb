@@ -80,7 +80,7 @@ action :add do
   # older versions of flatpak don't pick up flatpakrepo files in remotes.d
   # gotta tell it to import the remote manually
   unless flatpak_current_remotes.include?(new_resource.remote_name)
-    converge_by "import #{new_resource.remote_name}.flatpakrepo" do
+    converge_by "import /etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo" do
       shell_out!("flatpak remote-add #{new_resource.remote_name} /etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo")
     end
   end
@@ -105,7 +105,7 @@ action :remove do
     action :delete
   end
 
-  # older versions of flatpak don't updated from flatpakrepo files in remotes.d
+  # older versions of flatpak don't update when the .flatpakrepo is deleted
   # gotta tell it to delete the remote manually
   if flatpak_current_remotes.include?(new_resource.remote_name)
     converge_by "remove #{new_resource.remote_name}" do

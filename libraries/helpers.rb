@@ -14,7 +14,7 @@ module Flatpak
         if flatpak_version >= 1.1 # for --columns
           shell_out!('flatpak remotes --columns name').stdout.split
         else
-          shell_out!('flatpak remotes').stdout.split("\n").map { |r| r.split.first }
+          shell_out!('flatpak remotes').stdout.split("\n").map { |r| r.split("\t").first }
         end
       end
 
@@ -22,7 +22,10 @@ module Flatpak
         if flatpak_version >= 1.1 # for --columns
           shell_out!('flatpak list --columns application,ref').stdout.split
         else
-          shell_out!('flatpak list').stdout.split("\n").map { |r| r.split[-5] }
+          shell_out!('flatpak list').stdout.split("\n").map do |r|
+            ref = r.split("\t").first # list on this version only returns the full ref
+            [ref, ref.split('/').first] # so extract just the.application.id from it
+          end.flatten
         end
       end
 
