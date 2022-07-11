@@ -11,7 +11,7 @@ end
 # should install from `fedora` as it has higher priority
 # flatpak_app 'org.gnome.Maps'
 
-flatpak_app 'org.gnome.Music' do
+flatpak_app 'org.gnome.Weather' do
   remote 'flathub'
 end
 
