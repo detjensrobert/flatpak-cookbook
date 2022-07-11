@@ -109,7 +109,7 @@ action :remove do
   # gotta tell it to delete the remote manually
   if flatpak_current_remotes.include?(new_resource.remote_name)
     converge_by "remove #{new_resource.remote_name}" do
-      shell_out!("flatpak remote-delete #{new_resource.remote_name} /etc/flatpak/remotes.d/#{new_resource.remote_name}.flatpakrepo")
+      shell_out!("flatpak remote-delete #{new_resource.remote_name}")
     end
   end
 end
