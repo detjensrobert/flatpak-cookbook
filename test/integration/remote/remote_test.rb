@@ -33,14 +33,20 @@ control 'remote' do
     its('stdout') { should match /fedora/ }
     its('stdout') { should_not match /gnome-nightly/ }
   end
+end
 
+control 'filter' do
+  title 'Verify remote filter is honored correctly'
+  only_if 'remote filtering not supported by old flatpak' do
+    # only newer flatpak supports filters
+    !((os.redhat? && os.release.to_i == 7) || os.name == 'amazon' || (os.debian? && os.release.to_i == 10))
+    # command('flatpak --version').stdout.delete_prefix('Flatpak ').to_f >= 1.3
+  end
+
+  # recipe confgures remote to only show org.fedoraproject.*
   # describe command('flatpak remote-ls fedora --columns application') do
   describe command('flatpak remote-ls fedora') do
     its('stdout') { should match /org.fedoraproject.MediaWriter/ }
-    # recipe confgures remote to only show org.fedoraproject.*
-    # only newer flatpak has filter stuff though
-    unless (os.redhat? && os.release.to_i == 7) || os[:family] == 'amazon' || (os.debian? && os.release.to_i == 10)
-      its('stdout') { should_not match /org.gnome/ }
-    end
+    its('stdout') { should_not match /org.gnome/ }
   end
 end

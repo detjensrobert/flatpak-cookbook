@@ -10,8 +10,16 @@ module Flatpak
         @version ||= shell_out!('flatpak --version').stdout.delete_prefix('Flatpak ').to_f
       end
 
+      def flatpak_supports_columns?
+        flatpak_version >= 1.1
+      end
+
+      def flatpak_supports_filters?
+        flatpak_version >= 1.3  # 1.3.4
+      end
+
       def flatpak_current_remotes
-        if flatpak_version >= 1.1 # for --columns
+        if flatpak_supports_columns?
           shell_out!('flatpak remotes --columns name').stdout.split
         else
           shell_out!('flatpak remotes').stdout.split("\n").map { |r| r.split("\t").first }
@@ -19,10 +27,10 @@ module Flatpak
       end
 
       def flatpak_current_priorities
-        if flatpak_version >= 1.1 # for --columns
+        if flatpak_supports_columns?
           shell_out!('flatpak remotes --columns name,priority').stdout.split("\n").map(&:split).to_h
         else
-          shell_out!('flatpak remotes').stdout.split("\n").map do |r|
+          shell_out!('flatpak remotes -d').stdout.split("\n").map do |r|
             remote = r.split("\t")
             [remote[0], remote[-1]]
           end.to_h
@@ -30,7 +38,7 @@ module Flatpak
       end
 
       def flatpak_installed_apps
-        if flatpak_version >= 1.1 # for --columns
+        if flatpak_supports_columns?
           shell_out!('flatpak list --columns application,ref').stdout.split
         else
           shell_out!('flatpak list').stdout.split("\n").map do |r|
@@ -41,7 +49,7 @@ module Flatpak
       end
 
       def flatpak_updateable_apps
-        if flatpak_version >= 1.1 # for --columns
+        if flatpak_supports_columns?
           shell_out!('flatpak list --updates --columns application,ref').stdout.split
         else
           shell_out!('flatpak list --updates').stdout.split("\n").map do |r|
