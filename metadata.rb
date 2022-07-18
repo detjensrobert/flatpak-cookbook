@@ -3,7 +3,7 @@ maintainer        'Robert Detjens'
 maintainer_email  'chef@detjens.dev'
 license           'MIT'
 description       'Installs/Configures flatpak'
-version           '1.0.0'
+version           '1.0.1'
 chef_version      '>= 15.3'
 
 issues_url 'https://github.com/detjensrobert/flatpak-cookbook/issues'

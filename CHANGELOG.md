@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of the `flatpak` cookbook.
 
+## 1.0.1 (7/17/2022)
+
+- Update README badges
+- Create GH release on tag push
+
 ## 1.0.0 (7/17/2022)
 
 Initial release!
