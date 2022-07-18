@@ -14,7 +14,7 @@ control 'app' do
   title 'Flatpak apps are installed'
 
   # describe command('flatpak list --columns application,origin') do
-  describe command('flatpak list') do
+  describe command('flatpak list -d') do
     its('stdout') { should match /org.gnome.Weather.+flathub/ }
     its('stdout') { should match /org.gnome.Calculator.+fedora/ }
   end
