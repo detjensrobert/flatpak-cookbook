@@ -1,6 +1,6 @@
 # `flatpak` cookbook
 
-[![Cookbook Version](https://img.shields.io/cookbook/v/selnux.svg)](https://supermarket.chef.io/cookbooks/flatpak)
+[![Cookbook Version](https://img.shields.io/cookbook/v/flatpak.svg)](https://supermarket.chef.io/cookbooks/flatpak)
 [![CI State](https://github.com/detjensrobert/flatpak-cookbook/workflows/ci/badge.svg)](https://github.com/detjensrobert/flatpak-cookbook/actions?query=workflow%3Aci)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
