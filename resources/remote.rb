@@ -46,7 +46,7 @@ action :add do
 
   filter_file = nil
   if new_resource.filters
-    warn 'WARN: Flatpak versions < 1.3.4 do not support filtering remotes' unless flatpak_supports_filters?
+    warn 'Flatpak versions < 1.3.4 do not support filtering remotes' unless flatpak_supports_filters?
 
     filter_file = "/etc/flatpak/remotes.d/#{new_resource.remote_name}.filter"
     template filter_file do

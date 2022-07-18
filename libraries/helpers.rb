@@ -32,7 +32,7 @@ module Flatpak
         else
           shell_out!('flatpak remotes -d').stdout.split("\n").map do |r|
             remote = r.split("\t")
-            [remote[0], remote[-1]]
+            [remote[0], remote[-2]]
           end.to_h
         end
       end
