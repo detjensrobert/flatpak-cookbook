@@ -41,20 +41,20 @@ module Flatpak
         if flatpak_supports_columns?
           shell_out!('flatpak list --columns application,ref').stdout.split
         else
-          shell_out!('flatpak list').stdout.split("\n").map do |r|
+          shell_out!('flatpak list -d').stdout.split("\n").map do |r|
             ref = r.split("\t").first # list on this version only returns the full ref
-            [ref, ref.split('/').first] # so extract just the.application.id from it
+            [ref, ref.split('/').first] # so also extract the.application.id from it
           end.flatten
         end
       end
 
       def flatpak_updateable_apps
         if flatpak_supports_columns?
-          shell_out!('flatpak list --updates --columns application,ref').stdout.split
+          shell_out!('flatpak remote-ls --updates --columns application,ref').stdout.split
         else
-          shell_out!('flatpak list --updates').stdout.split("\n").map do |r|
+          shell_out!('flatpak remote-ls --updates -d').stdout.split("\n").map do |r|
             ref = r.split("\t").first # list on this version only returns the full ref
-            [ref, ref.split('/').first] # so extract just the.application.id from it
+            [ref, ref.split('/').first] # so also extract the.application.id from it
           end.flatten
         end
       end
