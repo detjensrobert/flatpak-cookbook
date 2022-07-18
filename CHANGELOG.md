@@ -1,10 +1,15 @@
-# flatpak CHANGELOG
+# `flatpak` CHANGELOG
 
-This file is used to list changes made in each version of the flatpak cookbook.
+This file is used to list changes made in each version of the `flatpak` cookbook.
 
-## 0.1.0
+## 1.0.0 (7/17/2022)
 
-Initial release.
+Initial release!
 
-- change 0
-- change 1
+Added:
+
+  - `flatpak_install` to install flatpak
+  - `flatpak_remote` to configure remotes
+  - `flatpak_app` to manage applications
+  - Resource documentation
+  - Integration testing
