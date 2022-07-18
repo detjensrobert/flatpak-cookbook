@@ -15,7 +15,7 @@ module Flatpak
       end
 
       def flatpak_supports_filters?
-        flatpak_version >= 1.3  # 1.3.4
+        flatpak_version >= 1.3 # 1.3.4
       end
 
       def flatpak_current_remotes
