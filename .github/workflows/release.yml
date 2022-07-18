@@ -10,8 +10,6 @@ jobs:
   release:
     name: Tagged Release
     runs-on: ubuntu-latest
-    needs: integration
-    if: github.tag
 
     steps:
       - name: Check out code
