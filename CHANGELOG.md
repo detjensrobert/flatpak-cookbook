@@ -6,10 +6,8 @@ This file is used to list changes made in each version of the `flatpak` cookbook
 
 Initial release!
 
-Added:
-
-  - `flatpak_install` to install flatpak
-  - `flatpak_remote` to configure remotes
-  - `flatpak_app` to manage applications
-  - Resource documentation
-  - Integration testing
+- `flatpak_install` to install flatpak
+- `flatpak_remote` to configure remotes
+- `flatpak_app` to manage applications
+- Resource documentation
+- Integration testing
